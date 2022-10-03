@@ -14,6 +14,7 @@ const expressMongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
 const compression = require('compression');
 const path = require('path');
+const OAuthClient = require('intuit-oauth');
 
 // Creating the express app
 const app = express();
@@ -61,9 +62,24 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
+// Instance of client
+const oauthClient = new OAuthClient({
+  clientId: process.env.QUICKBOOKS_CLIENT_ID,
+  clientSecret: process.env.QUICKBOOKS_CLIENT_SECRET,
+  environment: 'sandbox',
+  redirectUri: 'http://localhost:8080/api/v1/callback',
+});
+
+// AuthorizationUri
+// can be an array of multiple scopes ex : {scope:[OAuthClient.scopes.Accounting,OAuthClient.scopes.OpenId]}
+const authUri = oauthClient.authorizeUri({
+  scope: [OAuthClient.scopes.Accounting, OAuthClient.scopes.OpenId],
+  state: 'testState',
+});
+
 // Testing a route
 app.get('/', (req, res) => {
-  res.send('@2021, WORKZAT All Rights Reserved');
+  res.send('@2022, WESTENNORRIS All Rights Reserved');
 });
 
 // Register the routers
@@ -75,7 +91,6 @@ app.get('/return', passport.authenticate('facebook'), (req, res) => {
 
 // catch 404 and forward to error handler
 app.use((err, res) => {
-  console.error('---Route_not_found---');
   err.status = 'Url Not found!';
   err.statusCode = 404;
   return errorHandler(err, null, res);

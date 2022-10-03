@@ -1,7 +1,7 @@
 {
-  "name": "zehra_app",
+  "name": "quickbooks",
   "version": "1.0.0",
-  "description": "Backend For zehra_app",
+  "description": "Backend For quickbooks",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
@@ -33,6 +33,7 @@
     "express-session": "^1.11.3",
     "fb": "^2.0.0",
     "helmet": "^4.4.1",
+    "intuit-oauth": "^4.0.0",
     "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.3",

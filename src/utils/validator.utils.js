@@ -19,15 +19,9 @@ const schema = {
 function validateRequestHandler(request, methodName) {
   const schemaValidation = schema[methodName].validate(request);
   if (schemaValidation.error) {
-    return {
-      status: false,
-      error: { ...schemaValidation.error },
-    };
+    return { status: false, error: schemaValidation.error };
   }
-  return {
-    status: true,
-    value: { ...schemaValidation.value },
-  };
+  return { status: true, value: schemaValidation.value };
 }
 
 module.exports = validateRequestHandler;

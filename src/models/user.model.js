@@ -32,7 +32,7 @@ const userSchema = new Schema(
     },
     profileFinished: {
       type: Boolean,
-      default: false
+      default: false,
     },
     avatar: {
       type: String,

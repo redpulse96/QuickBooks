@@ -16,13 +16,10 @@ const signup = catchAsync(async (req, res, next) => {
 
   const merchantExists = await Users.findOne({ $or });
   if (merchantExists) {
-    console.log('----------| merchantExists |----------');
+    console.log('merchantExists');
+    console.dir(merchantExists);
     const message = merchantExists.email == email ? 'Email' : 'Username';
-    const invalidEmail = merchantExists.email == email ? true : false;
-    const invalidUsername = merchantExists.email == email ? true : false;
-    return next(
-      new AppError(message + ' already registered', 400, { invalidEmail, invalidUsername }),
-    );
+    return next(new AppError(`${message} already registered`, 400));
   }
   const merchantDetails = new Users();
   const salt = await generateSalt();
@@ -31,10 +28,7 @@ const signup = catchAsync(async (req, res, next) => {
   merchantDetails.email = email;
   merchantDetails.password = encryptedPassword;
   await merchantDetails.save();
-  res.status(200).json({
-    success: true,
-    result: merchantDetails.toJSON(),
-  });
+  res.status(200).json({ success: true, result: merchantDetails.toJSON() });
 });
 
 // Handler function to login the user
@@ -82,26 +76,20 @@ const update = catchAsync(async (req, res, next) => {
     }
   }
 
-  const update = await Users.updateOne({ _id }, updateObj);
-  if (!update.ok) return next(new AppError('No User updated!', 500));
-  console.log('----------| update |----------');
-  console.dir(update);
+  const data = await Users.updateOne({ _id }, updateObj);
+  if (!data.ok) return next(new AppError('No User updated!', 500));
+  console.log('update');
+  console.dir(data);
 
-  res.status(200).json({
-    status: 'success',
-    data: { ...update },
-  });
+  res.status(200).json({ data, status: 'success' });
 });
 
 // Function to get user by id
 const getSingleUser = catchAsync(async (req, res, next) => {
-  const { user } = req;
-  if (!user) return next(new AppError('User Not found!', 402));
+  const { user: data } = req;
+  if (!data) return next(new AppError('User Not found!', 402));
 
-  res.status(200).json({
-    status: 'success',
-    data: { ...user },
-  });
+  res.status(200).json({ data, status: 'success' });
 });
 
 const attachbranch = catchAsync(async (req, res, next) => {
@@ -114,12 +102,9 @@ const attachbranch = catchAsync(async (req, res, next) => {
 
   const update = await Users.updateOne({ _id }, { $push: { branchId } });
   if (!update.ok) return next(new AppError('No User updated!', 500));
-  console.log('----------| update |----------');
+  console.log('update');
 
-  res.status(200).json({
-    status: 'success',
-    data: {},
-  });
+  res.status(200).json({ status: 'success' });
 });
 
 // Send token to client
@@ -136,10 +121,7 @@ function sendToken(_id, statusCode, res) {
 
   res.cookie('jwt', token, cookieOptions);
 
-  res.status(statusCode).json({
-    token,
-    status: 'success',
-  });
+  res.status(statusCode).json({ token, status: 'success' });
 }
 
 module.exports = {

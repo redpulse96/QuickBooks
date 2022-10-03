@@ -1,42 +1,16 @@
 const bcrypt = require('bcrypt');
 const DEFAULT_SALT = 10;
 
-async function generateSalt() {
-  try {
-    const salt = await bcrypt.genSalt(DEFAULT_SALT);
-    return salt;
-  } catch (error) {
-    console.log('---generateHash.ERROR_CAUGHT---');
-    console.error(error);
-    throw error;
-  }
+function generateSalt() {
+  return bcrypt.genSalt(DEFAULT_SALT);
 }
 
-async function generateHash(password, salt) {
-  try {
-    const hash = await bcrypt.hash(password, salt);
-    return hash;
-  } catch (error) {
-    console.log('---generateHash.ERROR_CAUGHT---');
-    console.error(error);
-    throw error;
-  }
+function generateHash(password, salt) {
+  return bcrypt.hash(password, salt);
 }
 
-async function validatePassword(inputPassword, encryptedPassword) {
-  try {
-    //Match password
-    const isMatched = await bcrypt.compare(inputPassword, encryptedPassword);
-    return isMatched;
-  } catch (error) {
-    console.log('---ERROR_CAUGHT---');
-    console.error(error);
-    throw error;
-  }
+function validatePassword(inputPassword, encryptedPassword) {
+  return bcrypt.compare(inputPassword, encryptedPassword);
 }
 
-module.exports = {
-  generateHash,
-  generateSalt,
-  validatePassword,
-};
+module.exports = { generateHash, generateSalt, validatePassword };
